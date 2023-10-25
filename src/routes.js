@@ -17,4 +17,14 @@ module.exports = [
     method: 'POST',
     handler: UserController.createUser,//armazena a função para executar depois
   },
+  {
+    endpoint: '/users/:id',
+    method: 'PUT',
+    handler: UserController.updateUser,//armazena a função para executar depois
+  },
+  {
+    endpoint: '/users/:id',
+    method: 'DELETE',
+    handler: UserController.deleteUser,//armazena a função para executar depois
+  },
 ];

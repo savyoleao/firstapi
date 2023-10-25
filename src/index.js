@@ -1,10 +1,11 @@
 const http = require('http');
 const { URL } = require('url'); //desestruturou e puxou a classe URL
 
+const bodyParser = require('./helpers/bodyParser')
 const routes = require('./routes');
 
 const server = http.createServer(function (request, response) {
-  const parsedUrl = new URL(`http://localhost:8000${request.url}`) //criou a instância da classe URL
+  const parsedUrl = new URL(`http://localhost:3000${request.url}`) //criou a instância da classe URL
   console.log(`Request method: ${request.method} | Endpoint: ${parsedUrl.pathname}`);
 
   let { pathname } = parsedUrl;
@@ -27,10 +28,14 @@ const server = http.createServer(function (request, response) {
 
     response.send = (statusCode, body) => {
       response.writeHead(statusCode, {'Content-Type': 'application/json'});
-      response.send(JSON.stringify(body));
+      response.end(JSON.stringify(body));
     }
 
-    route.handler(request, response); //executa a função
+    if(['POST', 'PUT', 'PATCH'].includes(request.method)){
+      bodyParser(request, () => route.handler(request, response));
+    } else {
+      route.handler(request, response); //executa a função
+    }
   } else {
     response.writeHead(404, {'Content-Type': 'text/html'});
   response.end(`Cannot ${request.method} ${parsedUrl.pathname}`);
@@ -38,7 +43,7 @@ const server = http.createServer(function (request, response) {
 
 });//criando o servidor
 
-server.listen(7000, () => console.log('Server started at http://localhost:7000'));//botando o servidor no ar
+server.listen(3000, () => console.log('Server started at http://localhost:3000'));//botando o servidor no ar
 
 
 /* if(request.url === '/users' && request.method === 'GET') {
